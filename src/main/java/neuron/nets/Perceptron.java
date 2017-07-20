@@ -25,11 +25,10 @@ public class Perceptron {
     private Out[] outs;
 
     private double[] answer;
-    private int[] arg;
 
     private boolean isFileEmpty = false;
     private boolean isFileExist = false;
-    private String filePath = "D:\\Java Work Projects\\Neuro\\src\\main\\resources\\memory.txt";
+    private String filePath = "src/main/resources/memory.txt";
 
     private ArrayList<double[]> allWeights;
 
@@ -92,7 +91,11 @@ public class Perceptron {
             return;
         }
 
-        calcHiddensValue(arg);
+        for (int i = 0; i < enters.length; i++) {
+            enters[i].setInput(arg[i]);
+        }
+
+        calcHiddensValue();
 
         answer = new double[outs.length];
 
@@ -106,8 +109,6 @@ public class Perceptron {
 
             answer[i] = Const.sigmoid(exit);
         }
-
-        this.arg = arg;
     }
 
     private void saveMemory() {
@@ -138,17 +139,15 @@ public class Perceptron {
 
     /**
      * Вычисляем значения внутреннего слоя.
-     *
-     * @param arg Входной сигнал, 1 или 0.
      */
-    private void calcHiddensValue(int[] arg) {
+    private void calcHiddensValue() {
         for (int i = 0; i < hiddenLayers.length; i++) {
             for (int j = 0; j < hiddenLayers[i].getHiddens().length; j++) {
                 double value = 0;
 
                 if (i == 0) {
                     for (int k = 0; k < enters.length; k++) {
-                        value += (arg[k] * enters[k].getWeight()[j]);
+                        value += (enters[k].getInput() * enters[k].getWeight()[j]);
                     }
                 } else {
                     for (int k = 0; k < hiddenLayers[i - 1].getHiddens().length; k++) {
@@ -245,7 +244,7 @@ public class Perceptron {
 
     public void showAllInfo() {
         System.out.println("=====================");
-        System.out.println("  Main  Information  ");
+        System.out.println("--Main--Information--");
         System.out.println("=====================");
 
         System.out.println("Память существует: " + isFileExist);
@@ -312,8 +311,8 @@ public class Perceptron {
         System.out.println("=====================");
 
         System.out.print("In: ");
-        for (int i = 0; i < arg.length; i++) {
-            System.out.print(arg[i] + " ");
+        for (int i = 0; i < enters.length; i++) {
+            System.out.print(enters[i].getInput() + " ");
         }
         System.out.println();
         System.out.println("=====================");
